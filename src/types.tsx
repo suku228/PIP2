@@ -1,0 +1,1 @@
+export type routes = "products" | "cart";
