@@ -2,7 +2,6 @@ import { type Product } from "./../types/IProduct";
 import React from "react";
 import productsMock from "../mock-data/products.json";
 import type { FetchData } from "../types/IFetchData";
-// import { mapProduct } from "../helpers/productMapper";
 
 
 export const useFetch = (url: string): FetchData => {

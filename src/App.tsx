@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { CartProvider } from "./components/cart/cartProvider";
 import type { routes } from "./types";
 import { ProductListingPage } from "./components/product-lisintng-page/productListingPage";

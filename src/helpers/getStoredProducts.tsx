@@ -1,4 +1,3 @@
-import { CART_STORAGE_KEY } from "../constants";
 import type { Product } from "../types/IProduct";
 
 export const getInitialCart = (key: string): Product[] => {
