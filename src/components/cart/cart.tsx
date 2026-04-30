@@ -6,8 +6,9 @@ import { CouponBox } from "./couponBox";
 import { OrderSummary } from "./orderSummary";
 import "./styes/cartPage.css";
 import { TAX_RATE, VALID_COUPONS } from "../../constants";
+import type { routes } from "../../types";
 
-export const Cart: React.FC<{ setPage: (page: string) => void }> = ({
+export const Cart: React.FC<{ setPage: (page: routes) => void }> = ({
   setPage,
 }) => {
   const { cartItems, updateQuantity, updateAppliedCoupon, appliedCoupon } =

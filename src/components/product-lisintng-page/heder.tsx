@@ -2,9 +2,10 @@ import React, { useContext, useRef, useState } from "react";
 import "./styles/header.css";
 import { CartContext } from "../cart/cartContext";
 import type { CartContextType } from "../../types/ICartContext";
+import type { routes } from "../../types";
 
 interface Props {
-  onCartClick: () => void;
+  onCartClick: (page: routes) => void;
 }
 
 export const Header: React.FC<Props> = ({ onCartClick }) => {
@@ -61,11 +62,15 @@ export const Header: React.FC<Props> = ({ onCartClick }) => {
                   <li key={key} className="cart-popover__item">
                     {item.type === "cart" ? (
                       <>
-                        <strong>Cart updated:</strong>
+                        <strong>Cart updated:</strong>{" "}
+                        {item.action.toUpperCase()}
                       </>
                     ) : (
                       <>
-                        <strong>Coupon applied:</strong> {item.code}
+                        <strong>
+                          Coupon {item.code ? "applied" : "removed"} :
+                        </strong>{" "}
+                        {item.code || "--"}
                       </>
                     )}
                   </li>
@@ -74,7 +79,10 @@ export const Header: React.FC<Props> = ({ onCartClick }) => {
             </div>
           )}
         </div>
-        <button className="header__cart-btn" onClick={onCartClick}>
+        <button
+          className="header__cart-btn"
+          onClick={() => onCartClick("cart")}
+        >
           <svg
             width="22"
             height="22"

@@ -1,18 +1,16 @@
 import React from "react";
 import "./styles/productListingPage.css";
 import { ProductCard } from "./productCard";
-// import { useFetch } from "../../hooks/useFetch";
-// import { URL } from "../../constants";
-import { Header } from "./heder";
-import type { routes } from "../../types";
+// import { Header } from "./heder";
+// import type { routes } from "../../types";
 import type { Product } from "../../types/IProduct";
 
 export const ProductListingPage: React.FC<{
-  setPage: (page: routes) => void;
+  // setPage: (page: routes) => void;
   products: Product[] | null;
   loading: boolean;
   error: Error | null;
-}> = ({ setPage, products, loading, error }) => {
+}> = ({ products, loading, error }) => {
  
   if (loading) {
     return (
@@ -42,7 +40,7 @@ export const ProductListingPage: React.FC<{
 
   return (
     <>
-    <Header onCartClick={() => setPage("cart")} />
+    
       <div className="product-list__grid">
         {products?.map((product) => (
           <ProductCard id={product.id} product={product} />
