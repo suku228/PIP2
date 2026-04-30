@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CartContext } from "./cartContext";
 import type { Product } from "../../types/IProduct";
 import { APPLIED_COUPON_KEY, CART_STORAGE_KEY } from "../../constants";
@@ -56,13 +56,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const updateAppliedCoupon = (coupon: string | null) => {
+    updateCouponHistory();
     setAppliedCoupon(coupon);
-    updateCouponHistory(coupon);
   };
 
   const updateCartItemsHistory = (newCart: Product[], action: ActionType) => {
     setHistory((prevHistory) => {
-      const slicedHistory = prevHistory.length>=5 ? prevHistory.slice(0, 4) : prevHistory;
+      const slicedHistory =
+        prevHistory.length >= 5 ? prevHistory.slice(0, 4) : prevHistory;
       const updatedHistory = [
         { type: "cart", items: newCart, action } as CartSnapshot,
         ...slicedHistory,
@@ -71,11 +72,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const updateCouponHistory = (code: string | null) => {
-    setHistory((prevHistory) => [
-      ...prevHistory,
-      { type: "coupon", code } as HistoryEntry,
-    ]);
+  const updateCouponHistory = () => {
+    setHistory((prevHistory) => {
+      const slicedHistory =
+        prevHistory.length >= 5 ? prevHistory.slice(0, 4) : prevHistory;
+      return [{ type: "coupon", code: appliedCoupon } as HistoryEntry, ...slicedHistory];
+    });
   };
 
   const clearCart = () => {
@@ -88,6 +90,39 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
+
+
+  const undoLastAction = useCallback(() => {
+    setHistory((prevHistory) => {
+      if (prevHistory.length === 0) return prevHistory; // nothing to undo
+
+      const [last, ...rest] = prevHistory;
+
+      console.log("Undoing last action:", last);
+
+      if (last.type === "cart") {
+        setCartItems(last.items);
+      }else if (last.type === "coupon") {
+        setAppliedCoupon(last.code);
+      }
+      return rest; 
+    });
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isCtrlZ = (e.ctrlKey || e.metaKey) && e.key === "z";
+      if (!isCtrlZ) return;
+      // Don't hijack undo inside input/textarea
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      e.preventDefault();
+      undoLastAction();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [undoLastAction]);
 
   return (
     <>

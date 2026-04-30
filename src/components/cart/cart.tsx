@@ -14,12 +14,6 @@ export const Cart: React.FC<{ setPage: (page: routes) => void }> = ({
   const { cartItems, updateQuantity, updateAppliedCoupon, appliedCoupon } =
     useContext(CartContext) as CartContextType;
 
-  console.log(
-    "Rendering CouponBox with appliedCoupon:",
-    appliedCoupon,
-    "and couponError:",
-  );
-
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState<string>("");
 
